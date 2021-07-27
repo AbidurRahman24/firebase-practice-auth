@@ -3,6 +3,8 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from './firebase.config';
 import { useState } from 'react';
+import EmailPassword from './EmailPassword';
+
 
 // firebase.initializeApp(firebaseConfig);
 if (!firebase.apps.length) {
@@ -57,8 +59,8 @@ function App() {
 
   return (
     <div className="App">
-      { user.isSignedIn ? <button onClick={handleSignOut}>Sign Out</button> :
-        <button onClick={handleSignIn}>Sign In</button>
+      { user.isSignedIn ? <button onClick={handleSignOut}>Sign Out with Google</button> :
+        <button onClick={handleSignIn}>Sign In with Google</button>
       }
       {
         user.isSignedIn && <div>
@@ -67,6 +69,7 @@ function App() {
           <img src={user.photo} alt=""/>
         </div>
       }
+      <EmailPassword></EmailPassword>
     </div>
   );
 }
