@@ -4,6 +4,7 @@ import "firebase/auth";
 import firebaseConfig from './firebase.config';
 import { useState } from 'react';
 import EmailPassword from './EmailPassword';
+import FacebookLogin from './FacebookLogin';
 
 
 // firebase.initializeApp(firebaseConfig);
@@ -69,6 +70,7 @@ function App() {
           <img src={user.photo} alt=""/>
         </div>
       }
+      <FacebookLogin></FacebookLogin>
       <EmailPassword></EmailPassword>
     </div>
   );

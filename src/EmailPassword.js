@@ -19,8 +19,8 @@ const EmailPassword = () => {
     email: '',
     password: '',
     photo: '',
-    error:'',
-    success:false,
+    error: '',
+    success: false,
   })
 
   const handleBlur = (e) => {
@@ -43,52 +43,64 @@ const EmailPassword = () => {
     if (user.email && user.password) {
       firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
         .then((res) => {
-          const newUserInfo = {...user};
+          const newUserInfo = { ...user };
           newUserInfo.error = '';
           newUserInfo.success = true;
-        setUser(newUserInfo);
-        console.log('sign in user info', res.user);
+          setUser(newUserInfo);
+          updateUserName(user.name);
+          console.log('sign in user info', res.user);
         })
         .catch((error) => {
-          const newUserInfo = {...user};
+          const newUserInfo = { ...user };
           newUserInfo.error = error.message;
           newUserInfo.success = false;
           setUser(newUserInfo);
         });
-        
+
     }
-    if(!newUser && user.email && user.password){
+    if (!newUser && user.email && user.password) {
       firebase.auth().signInWithEmailAndPassword(user.email, user.password)
-      .then(res => {
-        const newUserInfo = {...user};
-        newUserInfo.error = '';
-        newUserInfo.success = true;
-        setUser(newUserInfo);
-        console.log('sign in user info', res.user);
-      })
-      .catch((error) => {
-        const newUserInfo = {...user};
-        newUserInfo.error = error.message;
-        newUserInfo.success = false;
-        setUser(newUserInfo);
-      });
+        .then(res => {
+          const newUserInfo = { ...user };
+          newUserInfo.error = '';
+          newUserInfo.success = true;
+          setUser(newUserInfo);
+          console.log('sign in user info', res.user);
+        })
+        .catch((error) => {
+          const newUserInfo = { ...user };
+          newUserInfo.error = error.message;
+          newUserInfo.success = false;
+          setUser(newUserInfo);
+        });
     }
     e.preventDefault()
+  }
+  const updateUserName = name => {
+    const user = firebase.auth().currentUser;
+
+    user.updateProfile({
+      displayName: name
+    }).then(() => {
+      console.log('update successfully');
+    }).catch((error) => {
+      console.log(error);
+    });
   }
   return (
     <div>
       <h1>Our OWN Auth</h1>
-      <input type="checkbox" onChange={() => setNewUser(!newUser)} name="newUser" id=""/>
+      <input type="checkbox" onChange={() => setNewUser(!newUser)} name="newUser" id="" />
       <label htmlFor="newUser">New User Sign up</label>
       <form onSubmit={handleSubmit}>
-        {newUser && <input name="name" type="text" onBlur={handleBlur} placeholder="Your name"/>}
-        <br/>
+        {newUser && <input name="name" type="text" onBlur={handleBlur} placeholder="Your name" />}
+        <br />
         <input type="text" name='email' onBlur={handleBlur} placeholder='Enter your Email' /><br />
         <input type="password" name='password' onBlur={handleBlur} placeholder='Enter your password' /> <br />
-        <input type="submit" value="Submit" />
+        <input type="submit" value={newUser ? 'Sign up' : 'Sign in'} />
       </form>
-      <p style={{color: 'red'}}>{user.error}</p>
-      { user.success && <p style={{color: 'green'}}>User { newUser ? 'created' : 'Logged In'} successfully</p>}
+      <p style={{ color: 'red' }}>{user.error}</p>
+      {user.success && <p style={{ color: 'green' }}>User {newUser ? 'created' : 'Logged In'} successfully</p>}
     </div>
   );
 };
